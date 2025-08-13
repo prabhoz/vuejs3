@@ -1,0 +1,15 @@
+{
+  "name": "vuejs3",
+  "version": "1.0.0",
+  "description": "Demo Vue 3 app fetching WordPress posts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No tests available\""
+  },
+  "keywords": [
+    "vue3",
+    "wordpress"
+  ],
+  "author": "",
+  "license": "MIT"
+}

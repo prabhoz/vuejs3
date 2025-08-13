@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Sample Vue 3 app fetching posts from the WordPress REST API." />
+  <meta name="keywords" content="Vue 3, WordPress, SEO" />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://wordpress.org" />
+  <link rel="canonical" href="https://example.com/" />
+  <meta property="og:title" content="Vue 3 WordPress Integration" />
+  <meta property="og:description" content="Sample app that fetches posts from WordPress using Vue 3" />
+  <meta property="og:type" content="website" />
+  <title>Vue 3 WordPress Integration</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "url": "https://example.com/",
+    "headline": "Vue 3 WordPress Integration",
+    "description": "Sample app that fetches posts from WordPress using Vue 3"
+  }
+  </script>
+</head>
+<body>
+  <main id="app">
+    <h1>WordPress Posts</h1>
+    <p v-if="error">{{ error }}</p>
+    <section v-else>
+      <article v-for="post in posts" :key="post.id">
+        <h2><a :href="'post.html?id=' + post.id" v-html="post.title.rendered"></a></h2>
+      </article>
+    </section>
+  </main>
+  <noscript>This page requires JavaScript to display WordPress posts.</noscript>
+  <script type="module">
+    const { createApp, ref, onMounted } = Vue;
+
+    createApp({
+      setup() {
+        const posts = ref([]);
+        const error = ref('');
+
+        async function fetchPosts() {
+          try {
+            const res = await fetch('https://wordpress.org/news/wp-json/wp/v2/posts');
+            if (!res.ok) throw new Error('Failed to fetch posts');
+            posts.value = await res.json();
+          } catch (err) {
+            error.value = err.message;
+          }
+        }
+
+        onMounted(fetchPosts);
+
+        return { posts, error };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
