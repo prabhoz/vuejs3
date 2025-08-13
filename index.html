@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vue 3 WordPress Integration</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h1>WordPress Posts</h1>
+    <p v-if="error">{{ error }}</p>
+    <ul v-else>
+      <li v-for="post in posts" :key="post.id" v-html="post.title.rendered"></li>
+    </ul>
+  </div>
+  <script type="module">
+    const { createApp, ref, onMounted } = Vue;
+
+    createApp({
+      setup() {
+        const posts = ref([]);
+        const error = ref('');
+
+        async function fetchPosts() {
+          try {
+            const res = await fetch('https://wordpress.org/news/wp-json/wp/v2/posts');
+            if (!res.ok) throw new Error('Failed to fetch posts');
+            posts.value = await res.json();
+          } catch (err) {
+            error.value = err.message;
+          }
+        }
+
+        onMounted(fetchPosts);
+
+        return { posts, error };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
